@@ -10,6 +10,8 @@ const init = () => {
   let state = {}
   state.uploader = uploader.init({fileTypes: ['jpeg'], maxKB: 270})
   flyd.map(x => console.log(x), state.uploader.file$) 
+  flyd.map(x => console.log(x), state.uploader.text$) 
+  flyd.map(x => console.log(x), state.uploader.image$) 
   return state
 }
 
@@ -17,7 +19,10 @@ const init = () => {
 const view = state =>
   h('div', [
       h('h2', 'Upload your file below')
-    , uploader.view({state: state.uploader})
+    , uploader.view({UI: 'input', state: state.uploader})
+    , h('img', {
+        props: {src: state.uploader.image$()}
+      })
   ])
 
 const patch = snabbdom.init([

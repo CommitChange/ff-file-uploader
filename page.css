@@ -12,13 +12,22 @@ body {
 }
 
 
-
 [data-ff-file-uploader] {
-  margin-top: 2rem;
   padding: 1rem;
   background: white;
+}
+
+div[data-ff-file-uploader] {
+  margin-top: 2rem;
   border: 2px dashed grey;
 }
 
+button[data-ff-file-uploader] {
+  margin-top: 1rem;
+  border-radius: 5px;
+  font-family: inherit;
+  line-height: 1;
+  border: 2px solid grey;
+}
 
 
