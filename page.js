@@ -9,7 +9,7 @@ import uploader from './index.js'
 const init = () => {
   let state = {}
   state.uploader = uploader.init({fileTypes: ['jpeg'], maxKB: 270})
-  flyd.map(x => console.log(x), state.uploader.error$) 
+  flyd.map(x => console.log(x), state.uploader.file$) 
   return state
 }
 

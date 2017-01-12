@@ -5,16 +5,9 @@ import h from 'snabbdom/h'
 
 
 const init = config => {
- let state = R.merge(
-    {
-      fileTypes: []
-    , maxKB: undefined 
-    }
-  , config 
-  )
-  
+  let state = R.merge({fileTypes: [], maxKB: undefined} , config)
   state.error$ = flyd.stream()
-  state.progress$ = flyd.stream()
+  state.file$ = flyd.stream()
   return state
 
 }
@@ -36,8 +29,8 @@ const handleDrop = state => e => {
     state.error$(fileSizeError)
     throw fileSizeError
   }
-  console.log(file)
 
+  state.file$(file)
 }
 
 const drag = obj => {
@@ -55,7 +48,6 @@ const drag = obj => {
 const button = obj => {
   return h('button', [obj.message || 'Upload'])
 }
-
 
 const view = obj => {
   if(obj.UI === 'button') { return button(obj) }
