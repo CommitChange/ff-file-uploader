@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "flimaflam file uploader",
   "main": "build.js",
-  "style": "index.js",
+  "style": "index.css",
   "scripts": {
     "budo": "budo page.js --live -- -t babelify",
     "postcss": "postcss -c postcss.js -w -l",
