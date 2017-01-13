@@ -8,19 +8,34 @@ import uploader from './index.js'
 
 const init = () => {
   let state = {}
-  state.uploader = uploader.init({fileTypes: ['jpeg'], maxKB: 270})
-  flyd.map(x => console.log(x), state.uploader.file$) 
+  state.uploader = uploader.init({fileTypes: ['jpeg', 'png'], maxKB: 400})
   flyd.map(x => console.log(x), state.uploader.text$) 
-  flyd.map(x => console.log(x), state.uploader.image$) 
   return state
 }
 
+const message = 'For this demo, you can upload the following file types: jpg, png' 
 
 const view = state =>
   h('div', [
-      h('h2', 'Upload your file below')
+      h('h2', 'ff-file-uploader')
+    , h('ul', [
+        h('li', 'Whitelist file types')
+      , h('li', 'Set a max file-size')
+      , h('li', 'Returns the following stream:')
+      , h('li', 'Choose between standard input and drag-and-drop UIs') 
+      , h('ul', [
+          h('li', 'file$')
+        , h('li', 'error$')
+        , h('li', 'image$ (if file type is image)')
+        , h('li', 'text$ (if file type is text)')
+        ])
+      ])
+    , h('hr')
+    , h('p', message)
+    , uploader.view({message: 'Drag an image to upload', UI: 'drag', state: state.uploader})
     , uploader.view({UI: 'input', state: state.uploader})
-    , h('img', {
+    , h('p.error', state.uploader.error$())
+    , h('img.image-preview', {
         props: {src: state.uploader.image$()}
       })
   ])

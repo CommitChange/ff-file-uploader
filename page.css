@@ -8,6 +8,7 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 16px;
   padding: 1rem;
+  line-height: 1.7;
   background: #f6f6f6;
 }
 
@@ -15,19 +16,17 @@ body {
 [data-ff-file-uploader] {
   padding: 1rem;
   background: white;
-}
-
-div[data-ff-file-uploader] {
   margin-top: 2rem;
   border: 2px dashed grey;
 }
 
-button[data-ff-file-uploader] {
-  margin-top: 1rem;
-  border-radius: 5px;
+input {
+  font-size: 16px;
   font-family: inherit;
-  line-height: 1;
-  border: 2px solid grey;
+}
+
+.image-preview {
+  width: 100%;
 }
 
 

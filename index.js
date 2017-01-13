@@ -1,23 +1,31 @@
 import R from 'ramda'
 import flyd from 'flyd'
+import flyd_filter from 'flyd/module/filter'
 import h from 'snabbdom/h'
 
 const init = config => {
   let state = R.merge({fileTypes: [], maxKB: undefined} , config)
   state.error$ = flyd.stream()
   state.file$ = flyd.stream()
-  state.image$ = flyd.map(readIfMatch('image', state), state.file$)
-  state.text$ = flyd.map(readIfMatch('text', state), state.file$)
+  const imageFile$ = flyd_filter(isType('image'), state.file$)
+  const textFile$ = flyd_filter(isType('text'), state.file$)
+  state.image$ = flyd.map(readImage(state), imageFile$) 
+  state.text$ = flyd.map(readText(state), textFile$) 
   return state
 }
 
-const readIfMatch = (type, state) => file => {
-  let isMatch = file.type.split('/')[0] === type 
-  if (!isMatch) return
+const isType = type => file => file.type.split('/')[0] === type 
+
+const readImage = state => file => {
   const reader = new FileReader
   reader.onload = ev => {state.image$(ev.target.result)}
-  if(type === 'image') { reader.readAsDataURL(file) }
-  if(type === 'text') { reader.readAsText(file) }
+  reader.readAsDataURL(file)
+}
+
+const readText = state => file => {
+  const reader = new FileReader
+  reader.onload = ev => {state.text$(ev.target.result)}
+  reader.readAsText(file)
 }
 
 const handleDrop = state => e => {
@@ -33,6 +41,7 @@ const handleChange = state => e => {
 const handleFile = (state, file) => {
   if(!file) return
   let type = R.last(file.type.split('/'))
+
   // checks file type against whitelisted file types 
   if(!R.contains(type, state.fileTypes)) {
     let fileTypeError = `${type.toUpperCase()} files cannot be uploaded`
@@ -45,6 +54,7 @@ const handleFile = (state, file) => {
     state.error$(fileSizeError)
     throw fileSizeError
   }
+  state.error$(false)
   state.file$(file)
 }
 
