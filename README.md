@@ -1,19 +1,42 @@
-# flimflam template
+# ff-file-uploader
 
-This is a template codebase that has the basic packages and blank files for initially creating a new flimflam component.
+Features:
+  - whitelist file types
+  - set a max file size
+  - drag and drop
+  - overrides default `<input type='file'>` styles
+  - returns the following streams: 
+    - file$
+    - error$ (based on whitelisted file types and max file size)
+    - image$ (if file type is image)
+    - text$ (if file type is text)
+    
+Demo: https://flimflamjs.github.io/ff-file-uploader/
 
-The code for your component should go in index.js.
-Any CSS that is necessary for you component should go in index.css.
 
-The code for rendering your component for the demo (docs) should go in page.js.
-Any CSS for your demo should go in page.css.
+Usage:
 
-To run the demo with live-reload, run `npm run budo`.
-To watch your css, run `npm run postcss`.
+```es6
+import uploader from 'ff-image-uploader'
 
-To build your demo, run `npm run build-docs`.
+const init = () => {
+  let state = {}
+  state.uploader = uploader.init({fileTypes: ['jpeg', 'png', 'plain'], maxKB: 2000})
+  return state
+}
 
-To babelify your index.js, run `npm run babel`
+const view = state =>
+  h('div'
+  , [
+      uploader.view({
+        dragContent: h('h1', 'Drag a file to upload')
+      , inputContent: h('button', 'Choose file') 
+      , state: state.uploader
+      })
+    ]  
+  )
+```
+
 
 
 
