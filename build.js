@@ -31,12 +31,13 @@ var init = function init(config) {
 
 var isType = function isType(type) {
   return function (file) {
-    return file.type.split('/')[0] === type;
+    return file && file.type.split('/')[0] === type;
   };
 };
 
 var readImage = function readImage(state) {
   return function (file) {
+    state.text$(undefined);
     var reader = new FileReader();
     reader.onload = function (ev) {
       state.image$(ev.target.result);
@@ -47,6 +48,7 @@ var readImage = function readImage(state) {
 
 var readText = function readText(state) {
   return function (file) {
+    state.image$(undefined);
     var reader = new FileReader();
     reader.onload = function (ev) {
       state.text$(ev.target.result);
@@ -69,6 +71,14 @@ var handleChange = function handleChange(state) {
   };
 };
 
+var error = function error(state, msg) {
+  state.file$(undefined);
+  state.image$(undefined);
+  state.text$(undefined);
+  state.error$(msg);
+  throw msg;
+};
+
 var handleFile = function handleFile(state, file) {
   if (!file) return;
   var type = _ramda2.default.last(file.type.split('/'));
@@ -76,20 +86,25 @@ var handleFile = function handleFile(state, file) {
   // checks file type against whitelisted file types 
   if (!_ramda2.default.contains(type, state.fileTypes)) {
     var fileTypeError = type.toUpperCase() + ' files cannot be uploaded';
-    state.error$(fileTypeError);
-    throw fileTypeError;
+    error(state, fileTypeError);
+    return;
   }
   // checks file size against maxKB 
   if (state.maxKB && file.size > state.maxKB * 1000) {
-    var fileSizeError = 'File size must not exceed ' + state.maxKB + ' KB';
-    state.error$(fileSizeError);
-    throw fileSizeError;
+    var fileSizeError = 'File size must not exceed ' + KBMB(state.maxKB);
+    error(state, fileSizeError);
+    return;
   }
-  state.error$(false);
+  state.error$(undefined);
   state.file$(file);
 };
 
-var drag = function drag(obj) {
+var KBMB = function KBMB(KB) {
+  if (KB >= 1000) return KB / 1000 + ' MB';
+  return KB + ' KB';
+};
+
+var view = function view(obj) {
   return (0, _h2.default)('div', {
     attrs: { 'data-ff-file-uploader': '' },
     on: {
@@ -98,22 +113,8 @@ var drag = function drag(obj) {
       },
       drop: handleDrop(obj.state)
     }
-  }, [obj.message || 'Upload']);
-};
-
-var input = function input(obj) {
-  return (0, _h2.default)('input', {
-    props: { type: 'file' },
-    attrs: { 'data-ff-file-uploader': '' },
-    on: { change: handleChange(obj.state) }
-  }, [obj.message || 'Upload']);
-};
-
-var view = function view(obj) {
-  if (obj.UI === 'input') {
-    return input(obj);
-  }
-  return drag(obj);
+  }, [(0, _h2.default)('div', { attrs: { 'data-ff-file-uploader-drag-message': '' } }, [obj.dragContent || 'Drag a file to upload']), (0, _h2.default)('div', { attrs: { 'data-ff-file-uploader-input-wrapper': '' } }, [(0, _h2.default)('input', { props: { type: 'file' },
+    on: { change: handleChange(obj.state) } }), (0, _h2.default)('div', obj.inputContent)])]);
 };
 
 module.exports = { view: view, init: init };
