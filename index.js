@@ -14,15 +14,17 @@ const init = config => {
   return state
 }
 
-const isType = type => file => file.type.split('/')[0] === type 
+const isType = type => file => file && file.type.split('/')[0] === type 
 
 const readImage = state => file => {
+  state.text$(undefined)
   const reader = new FileReader
   reader.onload = ev => {state.image$(ev.target.result)}
   reader.readAsDataURL(file)
 }
 
 const readText = state => file => {
+  state.image$(undefined)
   const reader = new FileReader
   reader.onload = ev => {state.text$(ev.target.result)}
   reader.readAsText(file)
@@ -38,6 +40,15 @@ const handleChange = state => e => {
   handleFile(state, e.target.files[0])
 }
 
+
+const error = (state, msg) => {
+  state.file$(undefined)
+  state.image$(undefined)
+  state.text$(undefined)
+  state.error$(msg)
+  throw msg
+}
+
 const handleFile = (state, file) => {
   if(!file) return
   let type = R.last(file.type.split('/'))
@@ -45,46 +56,46 @@ const handleFile = (state, file) => {
   // checks file type against whitelisted file types 
   if(!R.contains(type, state.fileTypes)) {
     let fileTypeError = `${type.toUpperCase()} files cannot be uploaded`
-    state.error$(fileTypeError)
-    throw fileTypeError
+    error(state, fileTypeError)
+    return
   }
   // checks file size against maxKB 
   if(state.maxKB && file.size > state.maxKB * 1000) {
-    let fileSizeError = `File size must not exceed ${state.maxKB} KB`
-    state.error$(fileSizeError)
-    throw fileSizeError
+    let fileSizeError = `File size must not exceed ${KBMB(state.maxKB)}`
+    error(state, fileSizeError)
+    return
   }
-  state.error$(false)
+  state.error$(undefined)
   state.file$(file)
 }
 
-
-const drag = obj => {
-  return h('div'
-   , {
-      attrs: {'data-ff-file-uploader': ''}
-    , on: {
-        dragover: e => e.preventDefault()
-      , drop: handleDrop(obj.state)
-      }
-     }
-  , [obj.message || 'Upload'])
+const KBMB = KB => {
+  if(KB >= 1000) return KB / 1000 + ' MB'
+  return KB + ' KB'
 }
 
-const input = obj => {
-  return h('input'
-   , {
-      props: {type: 'file'}
-    , attrs: {'data-ff-file-uploader': ''}
-    , on: {change: handleChange(obj.state) }
+
+const view = obj => 
+ h('div'
+ , {
+    attrs: {'data-ff-file-uploader': ''}
+  , on: {
+      dragover: e => e.preventDefault()
+    , drop: handleDrop(obj.state)
     }
-  , [obj.message || 'Upload'])
-}
+   }
+, [
+    h('div', {attrs: {'data-ff-file-uploader-drag-message': ''}}
+    , [obj.dragContent || 'Drag a file to upload'])
+  , h('div', {attrs: {'data-ff-file-uploader-input-wrapper': ''}}
+    , [
+      h('input', { props: {type: 'file'}
+      , on: {change: handleChange(obj.state) }}
+      )
+    , h('div', obj.inputContent )
+    ])
+  ])
 
-const view = obj => {
-  if(obj.UI === 'input') { return input(obj) }
-  return drag(obj)
-}
 
 module.exports = {view, init} 
 

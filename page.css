@@ -1,4 +1,5 @@
 @import 'normalize.css';
+@import './index.css';
 
 * {
   box-sizing: border-box;
@@ -8,10 +9,9 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 16px;
   padding: 1rem;
-  line-height: 1.7;
+  line-height: 1.6;
   background: #f6f6f6;
 }
-
 
 [data-ff-file-uploader] {
   padding: 1rem;
@@ -20,13 +20,16 @@ body {
   border: 2px dashed grey;
 }
 
-input {
-  font-size: 16px;
+button {
+  background: #f6f6f6;
+  border: 1px solid grey;
   font-family: inherit;
+  line-height: inherit; 
+  margin-top: 1rem;
+  border-radius: 5px;
 }
 
 .image-preview {
-  width: 100%;
+  max-width: 100%;
 }
-
 
