@@ -20,6 +20,8 @@ const view = state =>
     , h('ul', [
         h('li', 'Whitelist file types')
       , h('li', 'Set a max file size')
+      , h('li', 'drag and drop')
+      , h('li', "overrides default <input type='file'> style")
       , h('li', 'Returns the following streams:')
       , h('ul', [
           h('li', 'file$')
