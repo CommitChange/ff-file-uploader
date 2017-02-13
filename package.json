@@ -1,6 +1,6 @@
 {
   "name": "ff-file-uploader",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "flimaflam file uploader",
   "main": "build.js",
   "style": "index.css",
