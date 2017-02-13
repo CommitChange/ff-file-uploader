@@ -33,7 +33,7 @@ const view = state =>
     , h('hr')
     , h('p', message)
     , uploader.view({
-        inputContent: h('button', 'Choose file') 
+        messageText: 'Upload a file or '
       , state: state.uploader
       })
     , h('p.error', state.uploader.error$())

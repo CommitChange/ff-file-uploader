@@ -29,8 +29,8 @@ const view = state =>
   h('div'
   , [
       uploader.view({
-        dragContent: h('h1', 'Drag a file to upload')
-      , inputContent: h('button', 'Choose file') 
+        messageText: 'Upload a large photo of a dog' // optional
+      , inputText: 'Click here' // optional 
       , state: state.uploader
       })
     ]  

@@ -76,26 +76,23 @@ const KBMB = KB => {
 
 
 const view = obj => 
- h('div'
- , {
+ h('div', {
     attrs: {'data-ff-file-uploader': ''}
   , on: {
       dragover: e => e.preventDefault()
     , drop: handleDrop(obj.state)
     }
-   }
-, [
-    h('div', {attrs: {'data-ff-file-uploader-drag-message': ''}}
-    , [obj.dragContent || 'Drag a file to upload'])
-  , h('div', {attrs: {'data-ff-file-uploader-input-wrapper': ''}}
-    , [
-      h('input', { props: {type: 'file'}
-      , on: {change: handleChange(obj.state) }}
-      )
-    , h('div', obj.inputContent )
-    ])
+   }, [
+      h('span', {attrs: {'data-ff-file-uploader-text': ''}}, [
+        obj.messageText || 'Drag image here or '
+    , h('a', {attrs: {'data-ff-file-uploader-input': ''}}, [
+        obj.inputText || 'browse'
+      , h('input', { props: {type: 'file'}
+        , on: {change: handleChange(obj.state) }}
+        )
+      ])
   ])
-
+])
 
 module.exports = {view, init} 
 
