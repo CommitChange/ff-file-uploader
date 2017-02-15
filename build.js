@@ -104,17 +104,29 @@ var KBMB = function KBMB(KB) {
   return KB + ' KB';
 };
 
-var view = function view(obj) {
+var supportsTouch = function supportsTouch() {
+  return 'ontouchstart' in document.documentElement;
+};
+
+var clickView = function clickView(obj) {
+  return (0, _h2.default)('div', { attrs: { 'data-ff-file-uploader-click-content': '' } }, [(0, _h2.default)('input', { props: { type: 'file' },
+    attrs: { 'data-ff-file-uploader-input': '' },
+    on: { change: handleChange(obj.state) } }), obj.clickContent || 'Select file']);
+};
+
+var dragView = function dragView(obj) {
   return (0, _h2.default)('div', {
     attrs: { 'data-ff-file-uploader': '' },
     on: {
       dragover: function dragover(e) {
         return e.preventDefault();
       },
-      drop: handleDrop(obj.state)
-    }
-  }, [(0, _h2.default)('div', { attrs: { 'data-ff-file-uploader-drag-message': '' } }, [obj.dragContent || 'Drag a file to upload']), (0, _h2.default)('div', { attrs: { 'data-ff-file-uploader-input-wrapper': '' } }, [(0, _h2.default)('input', { props: { type: 'file' },
-    on: { change: handleChange(obj.state) } }), (0, _h2.default)('div', obj.inputContent)])]);
+      drop: handleDrop(obj.state) } }, [(0, _h2.default)('div', { attrs: { 'data-ff-file-uploader-drag-content': '' } }, [obj.dragContent || 'Drag a file to upload']), clickView(obj)]);
+};
+
+var view = function view(obj) {
+  if (supportsTouch() || obj.noDrag) return clickView(obj);
+  return dragView(obj);
 };
 
 module.exports = { view: view, init: init };
