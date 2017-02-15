@@ -4,6 +4,7 @@ Features:
   - whitelist file types
   - set a max file size
   - drag and drop
+  - hides drag and drop UI on mobile
   - overrides default `<input type='file'>` styles
   - returns the following streams: 
     - file$
@@ -13,11 +14,10 @@ Features:
     
 Demo: https://flimflamjs.github.io/ff-file-uploader/
 
-
 Usage:
 
-```es6
-import uploader from 'ff-image-uploader'
+```javascript
+const uploader = require('ff-image-uploader')
 
 const init = () => {
   let state = {}
@@ -29,8 +29,9 @@ const view = state =>
   h('div'
   , [
       uploader.view({
-        messageText: 'Upload a large photo of a dog' // optional
-      , inputText: 'Click here' // optional 
+        noDrag: true // optional - hides drag and drop UI
+      , dragContent: h('h3', 'Drag to upload a file...') // optional
+      , clickContent: h('button', 'or browse...') // optional
       , state: state.uploader
       })
     ]  
