@@ -20,8 +20,13 @@ body {
   border: 2px dashed grey;
 }
 
-a {
-  text-decoration: underline;
+button {
+  background: grey;
+  border: 1px solid grey;
+  border-radius: 5px;
+  color: white;
+  font: inherit;
+  padding: .5rem;
 }
 
 .image-preview {

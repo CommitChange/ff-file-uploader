@@ -2,7 +2,7 @@ import R from 'ramda'
 import flyd from 'flyd'
 import snabbdom from 'snabbdom'
 import h from 'snabbdom/h'
-import render from 'ff-core/render'
+import render from 'flimflam-render'
 
 import uploader from './index.js'
 
@@ -33,9 +33,8 @@ const view = state =>
     , h('hr')
     , h('p', message)
     , uploader.view({
-        noDrag: true
-      , dragContent: h('h1', 'asdf') 
-      , clickContent: h('button', 'click me') 
+        dragContent: h('h3', 'Drag to upload a file...') 
+      , clickContent: h('button', 'or browse...') 
       , state: state.uploader
       })
     , h('p.error', state.uploader.error$())
@@ -54,17 +53,10 @@ const view = state =>
       : ''
   ])
 
-const patch = snabbdom.init([
-  require("snabbdom/modules/class").default
-, require("snabbdom/modules/style").default
-, require("snabbdom/modules/props").default
-, require("snabbdom/modules/eventlisteners").default
-, require("snabbdom/modules/attributes").default
-])
 
 const container = document.querySelector('#container')
 
 const state = init()
 
-render({container, state, view, patch})
+render(view, state, container)
 
