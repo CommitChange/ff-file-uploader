@@ -1,8 +1,9 @@
-[data-ff-file-uploader] a {
+[data-ff-file-uploader-click-content] {
+  display: inline-block;
   position: relative;
 }
 
-[data-ff-file-uploader] input[type='file'] {
+[data-ff-file-uploader-input] {
   position: absolute;
   cursor: pointer;
   font-size: 0;

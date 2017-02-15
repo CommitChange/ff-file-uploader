@@ -33,7 +33,9 @@ const view = state =>
     , h('hr')
     , h('p', message)
     , uploader.view({
-        messageText: 'Upload a file or '
+        noDrag: true
+      , dragContent: h('h1', 'asdf') 
+      , clickContent: h('button', 'click me') 
       , state: state.uploader
       })
     , h('p.error', state.uploader.error$())

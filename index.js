@@ -74,25 +74,34 @@ const KBMB = KB => {
   return KB + ' KB'
 }
 
+const supportsTouch = () => 'ontouchstart' in document.documentElement
 
-const view = obj => 
- h('div', {
+const clickView = obj =>
+  h('div', {attrs: {'data-ff-file-uploader-click-content': ''}}
+  , [
+      h('input', { props: {type: 'file'}
+      , attrs: {'data-ff-file-uploader-input': ''}
+      , on: {change: handleChange(obj.state) }})
+    , obj.clickContent || 'Select file' 
+  ])
+
+const dragView = obj => 
+  h('div', {
     attrs: {'data-ff-file-uploader': ''}
   , on: {
       dragover: e => e.preventDefault()
-    , drop: handleDrop(obj.state)
-    }
-   }, [
-      h('span', {attrs: {'data-ff-file-uploader-text': ''}}, [
-        obj.messageText || 'Drag image here or '
-    , h('a', {attrs: {'data-ff-file-uploader-input': ''}}, [
-        obj.inputText || 'browse'
-      , h('input', { props: {type: 'file'}
-        , on: {change: handleChange(obj.state) }}
-        )
-      ])
-  ])
-])
+    , drop: handleDrop(obj.state)} }
+  , [
+    h('div', {attrs: {'data-ff-file-uploader-drag-content': ''}}
+     , [obj.dragContent || 'Drag a file to upload'])
+  , clickView(obj)
+   ]
+  )
+
+const view = obj => {
+  if(supportsTouch() || obj.noDrag)  return clickView(obj)
+  return dragView(obj)
+}
 
 module.exports = {view, init} 
 
