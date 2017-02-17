@@ -68,6 +68,7 @@ var handleChange = function handleChange(state) {
   return function (e) {
     e.preventDefault();
     handleFile(state, e.target.files[0]);
+    e.target.value = '';
   };
 };
 

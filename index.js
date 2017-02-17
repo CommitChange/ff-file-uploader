@@ -38,6 +38,7 @@ const handleDrop = state => e => {
 const handleChange = state => e => {
   e.preventDefault()
   handleFile(state, e.target.files[0])
+  e.target.value = ''
 }
 
 
